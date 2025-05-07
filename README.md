@@ -1,6 +1,6 @@
-# Discord x Jira Bot - Full Deployment & Usage Documentation
+# Discord x Jira Bot
 
-This bot automatically syncs Jira sprint issues with Discord threads, renames threads based on issue status, and adds a specified user to each thread. It also supports a `/clear` command to delete all created threads and auto-refreshes periodically.
+This bot automatically syncs Jira sprint issues with Discord threads, renames threads based on issue status, and adds a specified user to each thread.
 
 ---
 
@@ -52,7 +52,7 @@ JIRA_BOARD_ID=your_board_id (e.g., 67)
 node index.js
 ```
 
-### 5. Keep Bot Running with pm2 (Recommended)
+### 5. Keep Bot Running with pm2 on AWS (Recommended) also can run locally or on Raspberry Pi
 ```bash
 npm install pm2   # or sudo npm install -g pm2 if allowed
 npx pm2 start index.js --name discord-jira-bot
@@ -60,7 +60,6 @@ npx pm2 save
 npx pm2 startup
 ```
 Follow any instructions pm2 gives you after running `startup`.
-
 To check status:
 ```bash
 npx pm2 list
@@ -75,7 +74,7 @@ npx pm2 logs discord-jira-bot
 
 ---
 
-## If You Need to Change Servers
+## Setup
 1. Invite the bot to the new Discord server
 2. Update `.env` with the new `DISCORD_CHANNEL_ID`
 3. Restart the bot:
@@ -83,28 +82,16 @@ npx pm2 logs discord-jira-bot
 npx pm2 restart discord-jira-bot
 ```
 
----
-
-## Troubleshooting
-- `Command 'pm2' not found`: use `npx pm2` instead
-- Threads not updating: make sure statuses in Jira match exactly (e.g., `"Testing/Review"`)
-- Not being added to threads: ensure `lodriscoll33` exists in the server and is spelled correctly
-- Emoji not rendering: use standard Unicode emojis, not Discord shortcodes
-
----
-
 ## Cleaning Up
 To completely stop the bot and remove it from pm2:
 ```bash
 npx pm2 stop discord-jira-bot
 npx pm2 delete discord-jira-bot
 ```
+---
+## Known Issues:
 
-## You're Done!
-Your Discord x Jira bot is now:
-- Automated
-- Monitored
-- Continuously syncing
-- And fully deployed on AWS EC2
-
-Let me know if you want to add support for multiple servers, multiple users, or status-based notifications! 🚀
+- Bot can make duplicates when you start a new sprint while the bot is still running.
+- Long Story names causes bot to brick since the name of a thread is limited
+- Jira sometimes has trouble with API calls on boards that aren't your's, but you can have Jira make a copy of the board, sync it with the main one, and run requests through that.
+---
